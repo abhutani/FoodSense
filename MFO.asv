@@ -4,7 +4,6 @@ display('MFO is optimizing your problem');
 
 %Initialize the positions of moths
 Moth_pos=initialization(N,dim,ub,lb);
-display('yoyoyoy');
 for i = 1:N
 	for j = 1:dim
 		Moth_vel(i,j) = 0;
@@ -15,7 +14,7 @@ for i = 1:N
 	Moth_fitness(2,i) = 0;
 end
 % Constants set here
-G0 = 0.000001;
+G0 = 100;
 t0 = 1;
 beta = 0.2;
 
@@ -56,15 +55,19 @@ while Iteration<Max_iteration+1
         
         % Sort the moths
         double_population=[previous_population;best_flames];
+		display(Iteration)
+		size(previous_fitness)
+		size(best_flame_fitness)
         double_fitness=[previous_fitness best_flame_fitness];
         
 		fitTrans = transpose(double_fitness);
 		[double_fitness_sorted I]=sortrows(fitTrans,1);
-		double_fitness_sorted = transpose(double_fitness_sorted);
+		double_fitness_sorted = transpose(fitness_sorted);
 		
+        
         double_sorted_population=double_population(I,:);
-        fitness_sorted=double_fitness_sorted(:, 1:N);
-		
+        
+        fitness_sorted=double_fitness_sorted(1:N);
         sorted_population=double_sorted_population(1:N,:);
         
         % Update the flames
@@ -114,8 +117,6 @@ while Iteration<Max_iteration+1
     for i=1:size(Moth_pos,1) % iterate over each moth
         
         % Calculate new mass of moths
-% 		Moth_fitness(2,i)= 1/Moth_fitness(1,i) % adding mass as the 2nd column of the fitness matrix
-
         Moth_fitness(2,i)=Moth_fitness(2,i) + (Moth_fitness(1,i)/sum(Moth_fitness(1,:))) * 1;  % adding mass as the 2nd column of the fitness matrix
 %         display(['Moth fitness at ', num2str(i),': ', num2str(Moth_fitness(1,i))]);
 	end
