@@ -1,21 +1,5 @@
 %______________________________________________________________________________________________
-%  Moth-Flame Optimization Algorithm (MFO)                                                            
-%  Source codes demo version 1.0                                                                      
-%                                                                                                     
-%  Developed in MATLAB R2011b(7.13)                                                                   
-%                                                                                                     
-%  Author and programmer: Seyedali Mirjalili                                                          
-%                                                                                                     
-%         e-Mail: ali.mirjalili@gmail.com                                                             
-%                 seyedali.mirjalili@griffithuni.edu.au                                               
-%                                                                                                     
-%       Homepage: http://www.alimirjalili.com                                                         
-%                                                                                                     
-%  Main paper:                                                                                        
-%  S. Mirjalili, Moth-Flame Optimization Algorithm: A Novel Nature-inspired Heuristic Paradigm, 
-%  Knowledge-Based Systems, DOI: http://dx.doi.org/10.1016/j.knosys.2015.07.006
-%_______________________________________________________________________________________________
-% You can simply define your cost in a seperate file and load its handle to fobj 
+%  Moth-Flame Optimization Algorithm (MFO)                                                             
 % The initial parameters that you need are:
 %__________________________________________
 % fobj = @YourCostFunction
@@ -36,8 +20,17 @@ display('MFO is optimizing your problem');
 
 %Initialize the positions of moths
 Moth_pos=initialization(N,dim,ub,lb);
-display(num2str(size(Moth_pos,1)));
-% display('hello');
+for i in 1:N
+	for j in 1:dim
+		Moth_vel(i,j) = 0;
+	end
+end
+
+% Constants set here
+G0 = 100;
+T0 = 1;
+beta = 0.2;
+
 Convergence_curve=zeros(1,Max_iteration);
 
 Iteration=1;
@@ -56,7 +49,7 @@ while Iteration<Max_iteration+1
         Moth_pos(i,:)=(Moth_pos(i,:).*(~(Flag4ub+Flag4lb)))+ub.*Flag4ub+lb.*Flag4lb;  
         
         % Calculate the fitness of moths
-        Moth_fitness(1,i)=fobj(Moth_pos(i,:));  
+        Moth_fitness(1,i)= (Moth_pos(i,:));  
 %         display(['Moth fitness at ', num2str(i),': ', num2str(Moth_fitness(1,i))]);
     end
        
@@ -129,17 +122,26 @@ while Iteration<Max_iteration+1
         % Calculate new mass of moths
         Moth_fitness(2,i)=Moth_fitness(2,i) + (Moth_fitness(1,i)/sum(Moth_fitness(1,:))) * 1;  % adding mass as the 2nd column of the fitness matrix
 %         display(['Moth fitness at ', num2str(i),': ', num2str(Moth_fitness(1,i))]);
-    end
+	end
     
+	% Update G
+	G = G0*(t0/Iteration);
+	
     % Gravity ki vajah se position update
-    
     for i=1:size(Moth_pos,1) % iterate over each moth
-        for j=1:size(Moth_pos,1)
-            for k=1:dim
-                rvec(k) = Moth_pos(i,k)-Moth_pos(j,k);
-                mag = G*Moth_fitness(2,i)*Moth_fitness(2,j)/rvec
-            end
-    end
+        sum = 0; %make sure the whoel vector is 0
+		for j=1:size(Moth_pos,1)
+			if i~=j
+				rVec = Moth_pos(i)-Moth_pos(j);
+				mag = G*Moth_fitness(2,j)/norm(rVec);
+				rUnitVec = rVec/norm(rVec);
+				sum += mag*rUnitVec; 
+			end
+		end
+		Moth_vel(i, :) = Moth_vel(i, :)*rand + sum;
+		Moth_pos(i, :) = Moth_pos(i, :) + Moth_vel(i, :);
+	end
+	
     Convergence_curve(Iteration)=Best_flame_score;
     
     % Display the iteration and best optimum obtained so far

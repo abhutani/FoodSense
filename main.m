@@ -37,7 +37,7 @@ SearchAgents_no=30; % Number of search agents
 
 Function_name='F1'; % Name of the test function that can be from F1 to F23 (Table 1,2,3 in the paper)
 
-Max_iteration=1000; % Maximum numbef of iterations
+Max_iteration=1000; % Maximum number of iterations
 
 % Load details of the selected benchmark function
 [lb,ub,dim,fobj]=Get_Functions_details(Function_name);
