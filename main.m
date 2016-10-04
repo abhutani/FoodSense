@@ -3,7 +3,7 @@ clc
 
 SearchAgents_no=30; % Number of search agents
 
-Function_name='F1'; % Name of the test function that can be from F1 to F23 (Table 1,2,3 in the paper)
+Function_name='F3'; % Name of the test function that can be from F1 to F23 (Table 1,2,3 in the paper)
 
 Max_iteration=1000; % Maximum number of iterations
 
@@ -27,15 +27,15 @@ subplot(1,2,2);
 semilogy(cg_curve,'Color','b')
 title('Convergence curve')
 xlabel('Iteration');
-ylabel('Best flame (score) obtained so far');
+ylabel('Best score obtained so far');
 
 axis tight
 grid off
 box on
-legend('MFO')
+legend('MFO-GSA Hybrid')
 
-display(['The best solution obtained by MFO is : ', num2str(Best_pos)]);
-display(['The best optimal value of the objective funciton found by MFO is : ', num2str(Best_score)]);
+display(['The best solution obtained by hybrid is : ', num2str(Best_pos)]);
+display(['The best optimal value of the objective funciton found by hybrid is : ', num2str(Best_score)]);
 
         
 

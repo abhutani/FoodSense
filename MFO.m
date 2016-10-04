@@ -4,7 +4,6 @@ display('MFO is optimizing your problem');
 
 %Initialize the positions of moths
 Moth_pos=initialization(N,dim,ub,lb);
-display('yoyoyoy');
 for i = 1:N
 	for j = 1:dim
 		Moth_vel(i,j) = 0;
@@ -15,9 +14,9 @@ for i = 1:N
 	Moth_fitness(2,i) = 0;
 end
 % Constants set here
-G0 = 0.000001;
+G0 = 10^-5;
 t0 = 1;
-beta = 0.2;
+b = 0.1;
 
 Convergence_curve=zeros(1,Max_iteration);
 
@@ -112,16 +111,12 @@ while Iteration<Max_iteration+1
     end
     % For mass updation
     for i=1:size(Moth_pos,1) % iterate over each moth
-        
-        % Calculate new mass of moths
-% 		Moth_fitness(2,i)= 1/Moth_fitness(1,i) % adding mass as the 2nd column of the fitness matrix
-
-        Moth_fitness(2,i)=Moth_fitness(2,i) + (Moth_fitness(1,i)/sum(Moth_fitness(1,:))) * 1;  % adding mass as the 2nd column of the fitness matrix
-%         display(['Moth fitness at ', num2str(i),': ', num2str(Moth_fitness(1,i))]);
+        Moth_fitness(2,i) = 1/Moth_fitness(1,i);  % adding mass as the 2nd column of the fitness matrix
 	end
     
 	% Update G
-	G = G0*(t0/Iteration);
+	G = G0*(t0/Iteration)^b;
+% 	G = G0*(b^(Iteration));
 	
     % Gravity ki vajah se position update
     for i=1:size(Moth_pos,1) % iterate over each moth
@@ -135,7 +130,7 @@ while Iteration<Max_iteration+1
 			end
 		end
 		Moth_vel(i, :) = Moth_vel(i, :).*rand + accel;
-		Moth_pos(i, :) = Moth_pos(i, :) + Moth_vel(i, :);
+		Moth_pos(i, :) = Moth_pos(i, :).*rand + Moth_vel(i, :);
 	end
 	
     Convergence_curve(Iteration)=Best_flame_score;
