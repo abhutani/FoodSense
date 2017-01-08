@@ -1,8 +1,7 @@
 
-for i= 64:70
-	he = imread(['1_data set\1_data set\rot\rot (',int2str(i),').jpg']);
+	he = imread(['1_data set\1_data set\scab\scab (11).JPG']);
 	% he = imread('1_data set\1_data set\normal\normal (35).JPG');
-	image(he);
+	imshow(he);
 	cform = makecform('srgb2lab');
 	lab_he = applycform(he,cform);
 	
@@ -26,14 +25,14 @@ for i= 64:70
 		color(rgb_label ~= k) = 0;
 		segmented_images{k} = color;
 	end
-	subplot(2,3,1);
-	imshow(segmented_images{1}), title('objects in cluster 1');
+	subplot(2,4,1);
+	imshow(segmented_images{1}), title('cluster 1');
 	btn = uicontrol('Style', 'pushbutton', 'String', '1','Position', [20 20 50 20],'Callback', 'cla');
-	subplot(2,3,2);
-	imshow(segmented_images{2}), title('objects in cluster 2');
-	subplot(2,3,3);
-	imshow(segmented_images{3}), title('objects in cluster 3');
-	subplot(2,3,4);
+	subplot(2,4,2);
+	imshow(segmented_images{2}), title('cluster 2');
+	subplot(2,4,3);
+	imshow(segmented_images{3}), title('cluster 3');
+	subplot(2,4,4);
 	% imshow(segmented_images{4}), title('objects in cluster 4');
 	% subplot(2,3,5);
 	imshow(he), title('original');
@@ -62,8 +61,6 @@ for i= 64:70
 	dlmwrite('lbp_features.csv',LBP_features1,'delimiter',',','-append');
 	dlmwrite('lbp_features.csv',LBP_features2,'delimiter',',','-append');
 	dlmwrite('lbp_features.csv',LBP_features3,'delimiter',',','-append');
-
-end
 
       
 

@@ -1,0 +1,46 @@
+% Default variables
+n_population =  20;
+n_iterations =  50;
+n_bins       = 256;
+n_thresholds =   5;
+
+p_selection = 0.1;
+p_crossover = 0.8;
+p_mutation  = 0.1;
+assert(sum([p_selection, p_crossover, p_mutation]) == 1, 'Total sum of proportions have to be 1!');
+
+% Read image
+image = imread('images/img.png');
+
+% Convert image to gray levels
+if (size(image, 3) == 3)
+    image_gray = rgb2gray(image);
+else
+    image_gray = image;
+end
+
+% Initialization
+population = initialization(n_population, n_bins, n_thresholds);
+
+for i = 1:n_iterations
+    new_population = [];
+
+    % Evaluation of fitness
+    ranking = fitness(image, population, n_thresholds);
+
+    %% Reproduction
+    % Selection
+    % TODO create more strategies (like roulette wheel)
+    new_population = first_best(ranking, population, p_selection, new_population);
+
+    % Crossover
+    new_population = cs(population, p_crossover, new_population);
+
+    % Mutation
+    new_population = mt(population, p_mutation, new_population);
+
+    population = new_population;
+end
+
+% Accepting the solution
+accept_solution(image_gray, population, n_thresholds);
